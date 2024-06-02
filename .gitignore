@@ -1,3 +1,6 @@
+#ignore conf file
+*.conf
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
