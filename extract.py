@@ -81,25 +81,25 @@ def extract_relevant_data(current_playback):
   #create a list of size of our current playback
   size = len(current_playback)
 
-  song_names = []*size
-  artist_names = []*size
-  played_at_list = []*size
-  timestamps = []*size
+  song_names = []
+  artist_names = []
+  played_at_list = []
+  album = []
 
   for i in range (size):
-    song_names[i] = (current_playback[i]["track"]["name"])
-    artist_names[i] = (current_playback[i]["track"]["album"]["artists"][0]["name"])
-    played_at_list[i] = (current_playback[i]["played_at"])
-    timestamps[i] = (current_playback["played_at"][0:10])
+    song_names.append(current_playback[i]["track"]["name"])
+    artist_names.append(current_playback[i]["track"]["album"]["artists"][0]["name"])
+    played_at_list.append(current_playback[i]["played_at"])
+    album.append(current_playback[i]["track"]["album"]["name"])
         
     # Prepare a dictionary in order to turn it into a pandas dataframe below       
   song_dict = {
       "song_name" : song_names,
       "artist_name": artist_names,
-      "played_at" : played_at_list,
-      "timestamp" : timestamps
+      "album" : album,
+      "played_at" : played_at_list
   }
-  song_df = pd.DataFrame(song_dict, columns = ["song_name", "artist_name", "played_at", "timestamp"])
+  song_df = pd.DataFrame(song_dict, columns = ["song_name", "artist_name", "played_at", "album"])
   return song_df
       
 
@@ -111,8 +111,5 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id= client_id,
                                                scope= "user-read-recently-played"))
   
 results = sp.current_user_recently_played(limit =2)
-print (results)
-print("BREAK\n\n")
-print(results["items"][0]["played_at"])
-#df = extract_relevant_data(results["items"])
-#print(df)
+df = extract_relevant_data(results["items"])
+print(df)
