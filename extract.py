@@ -11,7 +11,7 @@ import os
 
 """
 extract.py is desgined to extract recently played songs from spotify. Naturally the spotify api
-returns a JSON format data, so we will convert it to CSV for pandas 
+returns a JSON format data, so we will convert it to pandas dataframe with only useful information
 """
 
 #create parser object
@@ -79,37 +79,44 @@ def extract_relevant_data(current_playback):
   extract the song name, artist, time played, and timestamp of songs
   """
   #create a list of size of our current playback
-  size = len(current_playback)
+  size = len(current_playback["items"])
 
+  #create lists of each data feature we want to collect
   song_names = []
   artist_names = []
   played_at_list = []
   album = []
 
+  #parse through the JSON data and collect our information. 
   for i in range (size):
-    song_names.append(current_playback[i]["track"]["name"])
-    artist_names.append(current_playback[i]["track"]["album"]["artists"][0]["name"])
-    played_at_list.append(current_playback[i]["played_at"])
-    album.append(current_playback[i]["track"]["album"]["name"])
+    song_names.append(current_playback["items"][i]["track"]["name"])
+    artist_names.append(current_playback["items"][i]["track"]["album"]["artists"][0]["name"])
+    played_at_list.append(current_playback["items"][i]["played_at"])
+    album.append(current_playback["items"][i]["track"]["album"]["name"])
         
-    # Prepare a dictionary in order to turn it into a pandas dataframe below       
+  # Prepare a dictionary in order to turn it into a pandas dataframe below       
   song_dict = {
       "song_name" : song_names,
       "artist_name": artist_names,
       "album" : album,
       "played_at" : played_at_list
   }
+  #create and return our df
   song_df = pd.DataFrame(song_dict, columns = ["song_name", "artist_name", "played_at", "album"])
   return song_df
       
 
 
 
+#create a spotify API user using our credentials. assure that your URI is the same as in your dashboard
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id= client_id,
                                                client_secret= client_secret,
                                                redirect_uri= "https://www.google.com",
                                                scope= "user-read-recently-played"))
-  
+
+#collect our JSON data 
 results = sp.current_user_recently_played(limit =2)
-df = extract_relevant_data(results["items"])
+
+#convert to pandas dataframe, extracting only relevant data
+df = extract_relevant_data(results)
 print(df)
