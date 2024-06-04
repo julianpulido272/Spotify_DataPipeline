@@ -61,19 +61,6 @@ def get_auth_header(token):
   """
   return {"Authorization": f"Bearer {token}"}
 
-def get_recently_played():
-  """
-  retrives a json list of recently played tracks from yesterday given a user header credentials
-  """
-  today = datetime.datetime.now()
-  yesterday = today - datetime.timedelta(days=2)
-  yesterday_unix_timestamp = int(yesterday.timestamp()) * 1000
-
-  #r = requests.get("https://api.spotify.com/v1/me/player/recently-played?after={time}".format(time=yesterday_unix_timestamp), headers = getAuthHeader(header))
-  #endpoint = "https://api.spotify.com/v1/me/players/recently-played"
-  #r = requests.get(endpoint, headers = getAuthHeader(header))
-  current_playbacks = sp.current_user_recently_played(after = yesterday_unix_timestamp)
-  return current_playbacks
 
 def extract_relevant_data(current_playback):
   """
@@ -130,3 +117,4 @@ def get_df():
   json_data = extract_recent_songs()
   return (extract_relevant_data(json_data))
 
+#print(extract_recent_songs())
