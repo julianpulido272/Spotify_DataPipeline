@@ -12,6 +12,8 @@ import os
 """
 extract.py is desgined to extract recently played songs from spotify. Naturally the spotify api
 returns a JSON format data, so we will convert it to pandas dataframe with only useful information
+
+also contains methods to connect to api using user credentials
 """
 
 #create parser object
