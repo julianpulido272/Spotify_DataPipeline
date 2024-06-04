@@ -18,18 +18,19 @@ def remove_duplicates(df):
   else:
     return df.drop_duplicates(subset = ['played_at'])
 
+def fixD_dates(df):
+  """
+  """
+
 
 
 if __name__ == "__main__":
-  #df = extract.get_df()
-  #remove_duplicates(df)
-  #print(df)
-  df = pd.DataFrame({
-    'brand': ['Yum Yum', 'Yum Yum', 'Indomie', 'Indomie', 'Indomie'],
-    'played_at': ['cup', 'cup', 'cup', 'pack', 'pack'],
-    'rating': [4, 4, 3.5, 15, 5]
-  })
-  print(df)
+  df = extract.get_df()
+  #df = pd.DataFrame({
+  #  'brand': ['Yum Yum', 'Yum Yum', 'Indomie', 'Indomie', 'Indomie'],
+  #  'played_at': ['cup', 'cup', 'cup', 'pack', 'pack'],
+  #  'rating': [4, 4, 3.5, 15, 5]
+  #})
   df =remove_duplicates(df)
   #df = df.drop_duplicates(subset = ['played_at'])
   print(df)

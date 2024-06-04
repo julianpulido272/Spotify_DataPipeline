@@ -75,25 +75,57 @@ def extract_relevant_data(current_playback):
   artist_names = []
   played_at_list = []
   album = []
+  id = []
 
   #parse through the JSON data and collect our information. 
   for i in range (size):
     song_names.append(current_playback["items"][i]["track"]["name"])
+    id.append(current_playback["items"][i]["track"]["id"])
     artist_names.append(current_playback["items"][i]["track"]["album"]["artists"][0]["name"])
     played_at_list.append(current_playback["items"][i]["played_at"])
     album.append(current_playback["items"][i]["track"]["album"]["name"])
+  
+  #get our song popularity
+  popularity = extract_popularity(id)
+  print(popularity)
+
         
   # Prepare a dictionary in order to turn it into a pandas dataframe below       
   song_dict = {
       "song_name" : song_names,
+      "id" : id,
+      "popularity" : popularity,
       "artist_name": artist_names,
       "album" : album,
       "played_at" : played_at_list
   }
+
+
   #create and return our df
-  song_df = pd.DataFrame(song_dict, columns = ["song_name", "artist_name", "played_at", "album"])
+  song_df = pd.DataFrame(song_dict, columns = ["song_name", "id" ,"popularity" ,"artist_name", "played_at", "album"])
   return song_df
-      
+  
+def extract_popularity(song_id_list: list[str]) ->list[str]:
+  """
+  given a list of song id's, extract the genre for each
+  """
+  #create new client connection to spotify api. you dont actually need client auth since we are just looking up track
+  sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id= client_id,
+                                               client_secret= client_secret,
+                                               redirect_uri= "https://www.google.com",
+                                               scope= "user-read-recently-played"))
+  
+  #get data of tracks we have recently listened to 
+  data = sp.tracks(song_id_list)
+  popularity = []
+
+  #get the popularity for each track
+  for song in data["tracks"]:
+    popularity.append(song["popularity"])
+  return popularity
+  
+
+
 
 def extract_recent_songs():
   """
@@ -117,4 +149,5 @@ def get_df():
   json_data = extract_recent_songs()
   return (extract_relevant_data(json_data))
 
-#print(extract_recent_songs())
+
+
