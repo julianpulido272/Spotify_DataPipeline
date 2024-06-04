@@ -106,17 +106,25 @@ def extract_relevant_data(current_playback):
   return song_df
       
 
-
-
-#create a spotify API user using our credentials. assure that your URI is the same as in your dashboard
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id= client_id,
+def extract_recent_songs():
+  """
+    creates a user connection to the spotify api and returns a json formatted data of recently played songs
+  """
+  #create a spotify API user using our credentials. assure that your URI is the same as in your dashboard
+  sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id= client_id,
                                                client_secret= client_secret,
                                                redirect_uri= "https://www.google.com",
                                                scope= "user-read-recently-played"))
+  
 
-#collect our JSON data 
-results = sp.current_user_recently_played(limit =2)
+  #collect our JSON data 
+  results = sp.current_user_recently_played(limit =2)
+  return results
 
-#convert to pandas dataframe, extracting only relevant data
-df = extract_relevant_data(results)
-print(df)
+def get_df():
+  """
+  returns a cleaned dataframe of our recently played songs
+  """
+  json_data = extract_recent_songs()
+  return (extract_relevant_data(json_data))
+
