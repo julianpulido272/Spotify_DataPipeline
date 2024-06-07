@@ -40,7 +40,7 @@ def transform() -> pd.DataFrame:
 
 if __name__ == "__main__":
   df = transform()
-  print(df)
+  print(df.columns)
 
   
 

@@ -87,7 +87,6 @@ def extract_relevant_data(current_playback):
   
   #get our song popularity
   popularity = extract_popularity(id)
-  print(popularity)
 
         
   # Prepare a dictionary in order to turn it into a pandas dataframe below       
