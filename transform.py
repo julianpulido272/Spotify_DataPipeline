@@ -24,14 +24,24 @@ def remove_missing_rows(df: pd.DataFrame)-> pd.DataFrame:
   """
   return df.dropna(subset=['id', 'played_at'])
 
+def transform() -> pd.DataFrame:
+  """
+  gets data extraction from extract.py and combines all data quality checks into one singular method
+  removes duplicates and removes missings rows
+  note: in future may add more to improve data analysis
+  """
+  df = extract.get_df()
+  df = remove_duplicates(df)
+  df = remove_missing_rows(df)
+  return df
+
 
 
 
 if __name__ == "__main__":
-  df = extract.get_df()
-  df = remove_duplicates(df)
-  df = remove_missing_rows(df)
+  df = transform()
   print(df)
+
   
 
 
