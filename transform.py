@@ -17,22 +17,20 @@ def remove_duplicates(df):
   #if not we remove one of them
   else:
     return df.drop_duplicates(subset = ['played_at'])
+  
+def remove_missing_rows(df: pd.DataFrame)-> pd.DataFrame:
+  """
+  remove rows that have missing values in id or time they are played at
+  """
+  return df.dropna(subset=['id', 'played_at'])
 
-def fixD_dates(df):
-  """
-  """
 
 
 
 if __name__ == "__main__":
   df = extract.get_df()
-  #df = pd.DataFrame({
-  #  'brand': ['Yum Yum', 'Yum Yum', 'Indomie', 'Indomie', 'Indomie'],
-  #  'played_at': ['cup', 'cup', 'cup', 'pack', 'pack'],
-  #  'rating': [4, 4, 3.5, 15, 5]
-  #})
-  df =remove_duplicates(df)
-  #df = df.drop_duplicates(subset = ['played_at'])
+  df = remove_duplicates(df)
+  df = remove_missing_rows(df)
   print(df)
   
 
